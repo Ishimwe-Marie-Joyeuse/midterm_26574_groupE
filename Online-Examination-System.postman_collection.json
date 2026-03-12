@@ -1,0 +1,85 @@
+{
+  "info": {
+    "name": "Online Examination System",
+    "description": "Location table uses UUID for ids. User saves via villageCode or villageName. Use location UUIDs in by-province, by-district, etc. (get from /api/locations/provinces or /children).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8082" },
+    { "key": "provinceId", "value": "00000000-0000-0000-0000-000000000001" },
+    { "key": "districtId", "value": "1" },
+    { "key": "sectorId", "value": "1" },
+    { "key": "cellId", "value": "1" },
+    { "key": "villageId", "value": "1" },
+    { "key": "villageCode", "value": "V-101010102" },
+    { "key": "userId", "value": "1" },
+    { "key": "examId", "value": "1" }
+  ],
+  "item": [
+    {
+      "name": "Locations (single table, LocationType enum)",
+      "item": [
+        { "name": "Get All Provinces", "request": { "method": "GET", "url": "{{baseUrl}}/api/locations/provinces" } },
+        { "name": "Get Children (Districts/Sectors/etc)", "request": { "method": "GET", "url": "{{baseUrl}}/api/locations/{{provinceId}}/children", "description": "Use provinceId for districts, districtId for sectors, etc." } },
+        { "name": "Get Children Paged", "request": { "method": "GET", "url": "{{baseUrl}}/api/locations/{{provinceId}}/children/paged?page=0&size=10" } },
+        { "name": "Get By Type (e.g. VILLAGE)", "request": { "method": "GET", "url": "{{baseUrl}}/api/locations/type/VILLAGE" } },
+        { "name": "Lookup Villages by Name", "request": { "method": "GET", "url": "{{baseUrl}}/api/locations/villages/lookup?name=Gihanga" } },
+        { "name": "Get Villages Under Location", "request": { "method": "GET", "url": "{{baseUrl}}/api/locations/{{provinceId}}/villages" } },
+        { "name": "Hierarchy Path", "request": { "method": "GET", "url": "{{baseUrl}}/api/locations/{{villageId}}/hierarchy-path" } },
+        { "name": "Search Locations", "request": { "method": "GET", "url": "{{baseUrl}}/api/locations/search?keyword=Gihanga" } },
+        { "name": "Exists by Code", "request": { "method": "GET", "url": "{{baseUrl}}/api/locations/exists/code/{{villageCode}}" } },
+        { "name": "Statistics", "request": { "method": "GET", "url": "{{baseUrl}}/api/locations/statistics" } }
+      ]
+    },
+    {
+      "name": "Users (location via villageCode or villageName)",
+      "item": [
+        {
+          "name": "Register User (villageCode)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"student1\",\n  \"email\": \"student1@example.com\",\n  \"password\": \"password123\",\n  \"fullName\": \"Alice Uwimana\",\n  \"role\": \"STUDENT\",\n  \"active\": true,\n  \"villageCode\": \"V-101010102\"\n}"
+            },
+            "url": "{{baseUrl}}/api/users",
+            "description": "villageCode: V-101010102 or 101010102"
+          }
+        },
+        {
+          "name": "Register User (villageName)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"student2\",\n  \"email\": \"student2@example.com\",\n  \"password\": \"password123\",\n  \"fullName\": \"Jean Habimana\",\n  \"role\": \"STUDENT\",\n  \"villageName\": \"Gihanga\"\n}"
+            },
+            "url": "{{baseUrl}}/api/users"
+          }
+        },
+        { "name": "Get All Users", "request": { "method": "GET", "url": "{{baseUrl}}/api/users?sortBy=fullName" } },
+        { "name": "Get Users by Province ID", "request": { "method": "GET", "url": "{{baseUrl}}/api/users/by-province/{{provinceId}}?page=0&size=10&sortBy=fullName&direction=asc" } },
+        { "name": "Get Users by District ID", "request": { "method": "GET", "url": "{{baseUrl}}/api/users/by-district/{{districtId}}?page=0&size=10" } },
+        { "name": "Get Users by Village ID", "request": { "method": "GET", "url": "{{baseUrl}}/api/users/by-village/{{villageId}}?page=0&size=10" } },
+        { "name": "Check Username Exists", "request": { "method": "GET", "url": "{{baseUrl}}/api/users/exists/username/student1" } }
+      ]
+    },
+    {
+      "name": "Exams",
+      "item": [
+        {
+          "name": "Create Exam",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"title\": \"Java Midterm\",\n  \"description\": \"OOP, Collections\",\n  \"durationMinutes\": 90,\n  \"totalMarks\": 100,\n  \"passingMarks\": 50,\n  \"active\": true\n}" },
+            "url": "{{baseUrl}}/api/exams"
+          }
+        },
+        { "name": "Enroll Student", "request": { "method": "POST", "url": "{{baseUrl}}/api/exams/{{examId}}/enroll/{{userId}}" } }
+      ]
+    }
+  ]
+}
