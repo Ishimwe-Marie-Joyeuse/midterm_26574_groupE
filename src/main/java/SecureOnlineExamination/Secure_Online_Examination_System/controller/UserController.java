@@ -4,6 +4,8 @@ import SecureOnlineExamination.Secure_Online_Examination_System.dto.CreateUserRe
 import SecureOnlineExamination.Secure_Online_Examination_System.model.User;
 import SecureOnlineExamination.Secure_Online_Examination_System.model.UserRole;
 import SecureOnlineExamination.Secure_Online_Examination_System.service.UserService;
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,14 +18,12 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/users")
 public class UserController {
 
     private final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+ 
 
     /**
      * POST /api/users - Register user with villageCode OR villageName only.
@@ -36,9 +36,8 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers(
-            @RequestParam(defaultValue = "id") String... sortBy) {
-        List<User> users = userService.getAllUsersSorted(sortBy);
+    public ResponseEntity<List<User>> getAllUsers( ) {
+        List<User> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
 

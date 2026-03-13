@@ -68,6 +68,10 @@ public class UserService {
         return userRepository.findAll(Sort.by(sortFields));
     }
 
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
     public Page<User> getUsersByRole(UserRole role, Pageable pageable) {
         return userRepository.findByRole(role, pageable);
     }

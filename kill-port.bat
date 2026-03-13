@@ -1,7 +1,7 @@
 @echo off
-REM Kill process using port (default: 8083). Usage: kill-port.bat [port]
+REM Kill process using port (default: 8080). Usage: kill-port.bat [port]
 set PORT=%1
-if "%PORT%"=="" set PORT=8083
+if "%PORT%"=="" set PORT=8080
 
 echo Finding process on port %PORT%...
 for /f "tokens=5" %%a in ('netstat -ano ^| findstr ":%PORT%" ^| findstr "LISTENING"') do (

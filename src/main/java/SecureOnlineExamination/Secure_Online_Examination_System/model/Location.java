@@ -1,10 +1,14 @@
 package SecureOnlineExamination.Secure_Online_Examination_System.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,13 +26,19 @@ import java.util.UUID;
         @Index(name = "idx_location_type", columnList = "location_type"),
         @Index(name = "idx_location_parent", columnList = "parent_id")
 })
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Location {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private UUID id;
 
     @Column(unique = true, nullable = false, length = 30)
@@ -65,7 +75,7 @@ public class Location {
         this.parent = parent;
     }
 
-    /** Walk up parent chain to get root (Province) */
+    @JsonIgnore
     public Location getProvince() {
         Location current = this;
         while (current.getParent() != null) {
